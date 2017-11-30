@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Trello Gallery Application</title>
+
+<style>
+
+.lane{
+	position:relative; 
+	top:80px;
+	margin-left:15px; 
+	min-width:300px; 
+	display:block; 
+	height:100px;
+	border-radius:5px; 
+	background-color:#c1c1d7;
+}
+.task{
+	position:relative; 
+	margin-top:10px;
+	margin-left:10px; 
+	width:280px; 
+	display:block; 
+	height:100px;
+	box-shadow: 5px 5px 2px grey;
+	border-radius:5px; 
+	border-bottom-color:grey; 
+	background-color:#efeff9;
+}
+.swimb{
+	position:absolute; 
+	outline:none;
+	margin-top:10px; 
+	right:10px;
+	height:30px; 
+	width:35%; 
+	background-color:white; 
+	color:black; 
+	font-size:1.5vw; 
+	border:0px;
+	border-radius:4px; 
+	vertical-align: bottom;
+	bottom:10px; 
+
+}
+.txt{
+	position:relative;
+	outline:none;
+	margin-top:5px;
+	margin-left:5px; 
+	width:265px;
+	height:60px;
+	border:0px;
+	border-radius:7px; 
+	background-color:white; 
+	color:#737373;
+}
+.heading{
+	font-weight:bold;
+	outline:none;
+	color:#3c3c5d;
+	margin-top:10px;
+	margin-left:2%; 
+	background-color:#c1c1d7; 
+	font-size:1.5vw; 
+	border:0px;  
+}
+
+.removeb{
+	position:relative;
+	border:0px;
+	outline:none;
+	border-radius:15px;
+	margin-top:2px;
+	margin-left:5px;
+	background-color:#c1c1d7; 
+	color:white;
+	width:100px;
+	height:20px;  
+}
+
+
+</style>
+
+	<script>
+
+        var i = 1;
+        var q = 1;
+        var t;
+        var tt;
+
+		//document.getElementsByTagName('html')[0].innerHTML=localStorage.getItem('thispage');}}
+       // For adding vertical lanes
+		function addlane(){
+			var j = document.getElementById("board");
+			j.style.width = "" +((i*2.1)*100+10)+ "px";
+			var k = document.createElement("div");
+			k.setAttribute("id","laneb"+i);
+            k.setAttribute("class","lane");
+            k.setAttribute("ondrop","drop(event)");
+            k.setAttribute("ondragover","allowDrop(event)");
+            k.innerHTML="<center><input type='text' maxlength='20'; class='heading' spellcheck='false' placeholder='HEADING MAX 20 CHAR'></center> <button id='b"+i+"' class='swimb' onclick='getl(this.id)'>Add Task</button>";
+            j.appendChild(k);
+			i++;
+			//var i=i;
+			//localStorage.setItem('thispage',document.getElementsByTagName('html')[0].innerHTML);
+		}
+        // For adding Tasks
+		function getl(x){
+            var a = "lane"+x;
+			var b = document.getElementById(a);
+    
+			//adding task
+			var c = document.createElement("div");
+			c.setAttribute("id","task"+q);
+			c.setAttribute("class","task");
+			c.setAttribute("draggable","true");
+			c.setAttribute("ondragstart","drag(event,parentNode.id)");
+			
+			c.innerHTML="<textarea id='t"+q+"' style='font-size:1.5vw' draggable='false' spellcheck='false' class='txt'></textarea> <button id='k"+q+"' onclick='rmvt(this.id,parentNode.parentNode.id)' class='removeb'>Remove Task</button>";
+			b.appendChild(c);
+			q++;
+			//var q;
+			//increase height of lane
+			var d = b.clientHeight;
+			b.style.height = (d+110) + "px";
+			//alert(b);
+			
+		}
+       //For removing Task
+		function rmvt(y,z){
+			var l = "tas"+y;
+			var m = document.getElementById(l);
+			var n = document.getElementById(z);
+			n.removeChild(m);
+			//alert(z);
+			//decrease height of lane
+			var nn = n.clientHeight;
+			n.style.height = (nn - 110) + "px";
+			
+		}
+
+
+
+		function drag(ev,g) {
+			//alert(g);
+			t = document.getElementById(g);
+			//get the height of the previous lane of task where it taken from
+			tt = t.clientHeight;
+		    ev.dataTransfer.setData("text", ev.target.id);
+		}
+
+		function allowDrop(ev) {
+		    ev.preventDefault();
+
+		}
+
+		function drop(ev) {  
+		    var data = ev.dataTransfer.getData("text");
+		    ev.preventDefault();
+		        if (!ev.target.getAttribute("ondrop")){	
+        		return false;
+        		}
+		    var p = ev.target.clientHeight;
+		    //decrease previouse lane height
+		    t.style.height = (tt-110) + "px";
+		    //increase present lane height
+		    ev.target.style.height = (p + 110) + "px";
+		    ev.target.appendChild(document.getElementById(data));
+			
+		}
+
+
+	</script>
+</head>
+
+	<body>
+
+		<div style="position:fixed; top:0%; left:0%; height:10%; width:100%; background-color:black; opacity:0.75;">
+			<button style="position:absolute; top:20%; left:2%; height:60%; width:15%; background-color:grey; color:white; font-size:2vw; border:0px; border-radius:5px; outline:none; box-shadow: 3px 3px 2px #a2a2c3;" onclick="addlane()">ADD LANE</button>
+			<b style="position:absolute; color:grey; font-size:3vw; top:10%; left:35%; outline:none; font-family:'Comic Sans MS',cursive,sans-serif; ">Trello Gallery Application</b>
+		</div>
+
+		<div id="board" style=" position:absolute; top:10%; left:0%; height:90%; min-width:100%; background:-webkit-linear-gradient(#5a5a8c,grey); overflow-y:scroll;  display:-webkit-flex; -webkit-flex-flow:row;">
+		</div>
+					
+	</body>
+
+</html>
